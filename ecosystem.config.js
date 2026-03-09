@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   apps: [
     {
-      name: 'csaudit-backend',
+      name: 'cod-data-backend',
       cwd: path.join(__dirname, 'Backend'),
       script: 'server.js',
       instances: 1,
@@ -17,7 +17,7 @@ module.exports = {
       merge_logs: true,
     },
     {
-      name: 'csaudit-frontend',
+      name: 'cod-data-frontend',
       cwd: path.join(__dirname, 'Frontend'),
       script: 'npm',
       args: ['run', 'dev'],

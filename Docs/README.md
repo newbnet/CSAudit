@@ -1,35 +1,42 @@
-# CSAudit Documentation
+# COD-DATA Documentation
 
-Documentation for the Cybersecurity Audit & Asset Management Portal.
+Cybersecurity Oversight & Defense – CSAudit project.
 
 ---
 
 ## Project Structure
 
-| Folder    | Purpose                                      |
-|-----------|----------------------------------------------|
-| `Frontend`| React.js UI (Tailwind CSS)                   |
-| `Backend` | Node.js + Express API                        |
-| `Docs`    | Project documentation                        |
+| Folder    | Purpose                              |
+|-----------|--------------------------------------|
+| `Frontend`| React + Vite + Tailwind (audit UI)   |
+| `Backend` | Node.js + Express API, db.json      |
+| `Docs`    | Project documentation                |
 
 ## Running with PM2
 
-From the project root:
+From the project root (PM2 is a project dependency, use `npm run` or `npx pm2`):
 
 ```bash
 # Start all services
-pm2 start ecosystem.config.js
+npm run start
+# or: npx pm2 start ecosystem.config.js
 
 # View logs
-pm2 logs
+npm run logs
 
 # View specific app logs
-pm2 logs csaudit-backend
-pm2 logs csaudit-frontend
+npx pm2 logs cod-data-backend
+npx pm2 logs cod-data-frontend
 
 # Status
-pm2 status
+npm run status
 
 # Stop all
-pm2 stop all
+npm run stop
 ```
+
+## Related Docs
+
+- [HOW_TO_AUDITOR.md](HOW_TO_AUDITOR.md) – Step-by-step auditor guide (scan, import, manage)
+- [USER_ROLES.md](USER_ROLES.md) – Auditor and end-user roles
+- [AUDITOR_SOFTWARE_LIST.md](AUDITOR_SOFTWARE_LIST.md) – Professional audit tools

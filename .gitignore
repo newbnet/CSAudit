@@ -1,6 +1,8 @@
 node_modules/
 logs/
+dist/
 *.log
 .env
 .env.local
 .DS_Store
+Backend/db.json
