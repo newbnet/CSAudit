@@ -36,7 +36,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none"
-              placeholder="auditor@cod-data.com"
+              placeholder="you@example.com"
               required
             />
           </div>
@@ -47,7 +47,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none"
-              placeholder="demo123"
+              placeholder="••••••••"
               required
             />
           </div>
@@ -59,9 +59,6 @@ export default function Login() {
             Sign in
           </button>
         </form>
-        <p className="mt-6 text-slate-500 text-xs">
-          Demo: auditor@cod-data.com / enduser@cod-data.com — password: demo123
-        </p>
       </div>
     </div>
   );

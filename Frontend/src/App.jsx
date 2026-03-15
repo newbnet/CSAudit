@@ -9,7 +9,7 @@ import UserManagement from './pages/UserManagement';
 function ProtectedRoute({ children, role }) {
   const { user, loading } = useAuth();
   if (loading) return <div className="min-h-screen bg-slate-900 flex items-center justify-center text-slate-500">Loading...</div>;
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
   if (role && user.role !== role) return <Navigate to={user.role === 'auditor' ? '/auditor' : '/dashboard'} replace />;
   return children;
 }

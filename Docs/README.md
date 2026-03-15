@@ -25,8 +25,8 @@ npm run start
 npm run logs
 
 # View specific app logs
-npx pm2 logs cod-data-backend
-npx pm2 logs cod-data-frontend
+npx pm2 logs cybersecurity-backend
+npx pm2 logs cybersecurity-frontend
 
 # Status
 npm run status
@@ -37,6 +37,7 @@ npm run stop
 
 ## Related Docs
 
+- [DEPLOYMENT.md](DEPLOYMENT.md) – Proxy setup (cod-data.com → 10.10.10.61), DNS, HTTPS
 - [HOW_TO_AUDITOR.md](HOW_TO_AUDITOR.md) – Step-by-step auditor guide (scan, import, manage)
 - [USER_ROLES.md](USER_ROLES.md) – Auditor and end-user roles
 - [AUDITOR_SOFTWARE_LIST.md](AUDITOR_SOFTWARE_LIST.md) – Professional audit tools

@@ -2,9 +2,9 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { readDb } = require('../lib/db');
+const { getJwtSecret } = require('../lib/config');
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || 'cod-data-dev-secret-change-in-production';
 
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -25,7 +25,7 @@ router.post('/login', (req, res) => {
 
   const token = jwt.sign(
     { id: user.id, role: user.role, projectIds: user.projectIds },
-    JWT_SECRET,
+    getJwtSecret(),
     { expiresIn: '7d' }
   );
 

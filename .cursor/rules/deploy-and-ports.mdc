@@ -1,0 +1,18 @@
+---
+description: Deploy workflow and production port tracking for this project
+alwaysApply: false
+globs: deploy.sh,ecosystem.config.js,package.json,Docs/*.md
+---
+
+# Deploy and ports
+
+- This project uses the **dev → production** workflow: develop locally, push with `npm run deploy` to 10.10.10.64.
+- Production ports: **Frontend 3010**, **Backend 5010** (recorded in ~/.cursor/production-ports.md). New projects use 3020/5020, then +10.
+- PM2 app names: `cybersecurity-backend`, `cybersecurity-frontend`. For other projects on the same server, use the **deploy-dev-to-production** skill and the ports registry.
+
+## UFW on cod-node (10.10.10.64)
+
+Run `scripts/setup-ufw-cod-node.sh` on the server to restrict access:
+- SSH allowed only from 10.10.10.5 (run while connected from there to avoid lockout)
+- Port 5010 allowed only from NPM (10.10.10.61)
+- IPv6 disabled

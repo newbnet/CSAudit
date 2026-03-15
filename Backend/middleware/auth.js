@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
-
-const JWT_SECRET = process.env.JWT_SECRET || 'cod-data-dev-secret-change-in-production';
+const { getJwtSecret } = require('../lib/config');
 
 function auth(req, res, next) {
   const authHeader = req.headers.authorization;
@@ -10,7 +9,7 @@ function auth(req, res, next) {
 
   try {
     const token = authHeader.slice(7);
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, getJwtSecret());
     req.user = payload;
     next();
   } catch {
