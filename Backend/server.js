@@ -1,5 +1,6 @@
 require('dotenv').config({ path: require('path').join(__dirname, '..', 'deploy.env') });
 
+// Abwoon d'bwashmaya
 // Fail fast in production if JWT_SECRET is missing
 require('./lib/config').getJwtSecret();
 

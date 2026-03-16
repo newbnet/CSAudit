@@ -27,8 +27,9 @@ export default function Home() {
       {/* Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="text-xl font-bold text-emerald-400 tracking-tight">
-            COD-DATA
+          <Link to="/" className="flex items-center gap-3 group">
+            <img src="/cod-data-logo.png" alt="COD-DATA" className="h-11 w-11 object-contain brightness-110 contrast-110" />
+            <span className="text-xl font-bold text-emerald-400 tracking-tight group-hover:text-emerald-300 transition-colors">COD-DATA</span>
           </Link>
           <div className="flex items-center gap-6">
             <a href="#features" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">Features</a>
@@ -47,6 +48,9 @@ export default function Home() {
         <div className="absolute top-40 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="relative max-w-4xl mx-auto text-center">
+          <div className="inline-flex items-center justify-center p-4 rounded-2xl bg-slate-800/60 border border-emerald-500/30 shadow-[0_0_40px_rgba(16,185,129,0.15)] mb-8">
+            <img src="/cod-data-logo.png" alt="COD-DATA" className="h-24 w-24 md:h-32 md:w-32 object-contain brightness-110" />
+          </div>
           <p className="text-emerald-400/90 text-sm font-medium tracking-wider uppercase mb-4">
             Cybersecurity Oversight & Defense
           </p>
@@ -165,7 +169,7 @@ export default function Home() {
           </div>
 
           {/* Projects */}
-          <div className="grid md:grid-cols-2 gap-6 mb-12">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
             <a
               href="https://cod-data.com"
               className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
@@ -188,6 +192,19 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Grab</h3>
                 <p className="text-slate-400 text-sm">Video downloader</p>
                 <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">grab.cod-data.com →</span>
+              </div>
+            </a>
+            <a
+              href="https://spectra.cod-data.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+            >
+              <span className="text-3xl">📊</span>
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Spectra</h3>
+                <p className="text-slate-400 text-sm">Spectrum & frequency analyzer</p>
+                <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">spectra.cod-data.com →</span>
               </div>
             </a>
           </div>
@@ -241,7 +258,10 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-slate-800 py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-          <span className="text-slate-500 text-sm">COD-DATA · Cybersecurity Oversight & Defense</span>
+          <div className="flex items-center gap-2">
+            <img src="/cod-data-logo.png" alt="" className="h-7 w-7 object-contain opacity-90 brightness-110" />
+            <span className="text-slate-500 text-sm">COD-DATA · Cybersecurity Oversight & Defense</span>
+          </div>
           <div className="flex gap-6">
             <a href="#features" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Features</a>
             <a href="#built-for" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Who it's for</a>

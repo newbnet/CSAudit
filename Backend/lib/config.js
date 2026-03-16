@@ -1,5 +1,6 @@
 /**
  * Centralized config. Fails fast in production if JWT_SECRET is missing.
+ * Abwoon d'bwashmaya
  */
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 
