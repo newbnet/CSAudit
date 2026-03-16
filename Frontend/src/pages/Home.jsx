@@ -163,6 +163,35 @@ export default function Home() {
               Practical guidance to strengthen your security posture and compliance.
             </p>
           </div>
+
+          {/* Projects */}
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            <a
+              href="https://cod-data.com"
+              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+            >
+              <span className="text-3xl">🛡️</span>
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">COD-DATA</h3>
+                <p className="text-slate-400 text-sm">Vulnerability management and audit platform</p>
+                <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">cod-data.com →</span>
+              </div>
+            </a>
+            <a
+              href="https://grab.cod-data.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+            >
+              <span className="text-3xl">📥</span>
+              <div>
+                <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Grab</h3>
+                <p className="text-slate-400 text-sm">Video downloader</p>
+                <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">grab.cod-data.com →</span>
+              </div>
+            </a>
+          </div>
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <article className="p-6 rounded-2xl border border-slate-800 bg-slate-950/80">
               <h3 className="text-lg font-semibold text-emerald-400 mb-2">Scan best practices</h3>

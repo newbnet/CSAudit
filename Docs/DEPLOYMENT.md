@@ -67,13 +67,19 @@ This builds the frontend, pushes to the server, and starts production mode. The 
 
 ## 4. Firewall
 
-Allow HTTP/HTTPS on 10.10.10.61:
+**On 10.10.10.61 (NPM):** Allow HTTP/HTTPS:
 
 ```bash
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw enable
 ```
+
+**On 10.10.10.64 (cod-node, app server):** Allow NPM to reach both Cybersecurity ports. Use `scripts/setup-ufw-cod-node.sh`, which allows:
+- **3010** (frontend) from 10.10.10.61
+- **5010** (backend) from 10.10.10.61  
+
+If you only use production mode (backend serves built app on 5010), then only 5010 is needed from NPM; the script allows both for flexibility.
 
 ---
 
@@ -83,5 +89,5 @@ sudo ufw enable
 |------------|--------------------------|
 | Domain     | cod-data.com             |
 | Proxy host | 10.10.10.61              |
-| Nginx Proxy Manager | Proxies cod-data.com → 10.10.10.64:5010 |
-| App server | Backend serves frontend + API on port 5010 |
+| Nginx Proxy Manager | Proxies cod-data.com → 10.10.10.64:5010 (or :3010 for front + :5010 for /api in two-process mode) |
+| App server | Frontend 3010, Backend 5010 (or backend serves app on 5010 only in production build) |
