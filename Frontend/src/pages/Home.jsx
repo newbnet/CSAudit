@@ -118,6 +118,11 @@ export default function Home() {
                 desc: 'Works with Nmap, OpenVAS, and Nessus. Your tools, your data.',
                 icon: '🔓',
               },
+              {
+                title: 'Protective DNS',
+                desc: 'DNS-layer security blocks malicious domains, phishing, and malware before they reach your network. First line of defense.',
+                icon: '🛡️',
+              },
             ].map((f) => (
               <div
                 key={f.title}
@@ -233,6 +238,14 @@ export default function Home() {
                 <li>• High — significant impact if exploited</li>
                 <li>• Medium — should be remediated promptly</li>
                 <li>• Low / Info — context and hardening</li>
+              </ul>
+            </article>
+            <article className="p-6 rounded-2xl border border-slate-800 bg-slate-950/80">
+              <h3 className="text-lg font-semibold text-emerald-400 mb-2">Protective DNS</h3>
+              <ul className="text-slate-400 text-sm space-y-2">
+                <li>• Blocks malicious domains before resolution</li>
+                <li>• Stops phishing, malware C2, and botnet traffic</li>
+                <li>• Zero-trust first line of defense at the DNS layer</li>
               </ul>
             </article>
           </div>
