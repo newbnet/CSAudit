@@ -6,7 +6,8 @@ globs: deploy.sh,ecosystem.config.js,package.json,Docs/*.md
 
 # Deploy and ports
 
-- This project uses the **dev → production** workflow: develop locally, push with `npm run deploy` to 10.10.10.64.
+- This project uses the **dev → production** workflow: develop on the dev PC, then **`npm run deploy`** to **10.10.10.64** (see `deploy.sh`; `DEPLOY_PATH` defaults to `/local/bin/projects/Cybersecurity`).
+- **Server-side commands** (`npm audit`, `npx pm2`, manual `npm install`): run only **on cod-node after SSH**, under **`/local/bin/projects/Cybersecurity`** — not under a dev PC home path like `~/Documents/...`.
 - Production ports: **Frontend 3010**, **Backend 5010** (recorded in ~/.cursor/production-ports.md). New projects use 3020/5020, then +10.
 - PM2 app names: `cybersecurity-backend`, `cybersecurity-frontend`. For other projects on the same server, use the **deploy-dev-to-production** skill and the ports registry.
 

@@ -45,7 +45,11 @@ If your domain is registered with **Square**:
 
 ## 3. COD-DATA App (production)
 
-**Before first deploy:** On the server (`10.10.10.64`), create `deploy.env` in the project root with:
+**Before first deploy:** On **cod-node** (`ssh root@10.10.10.64`), create `deploy.env` in the **server** project root:
+
+`/local/bin/projects/Cybersecurity/deploy.env`
+
+with:
 
 ```
 JWT_SECRET=your-random-secret-at-least-32-characters-long
@@ -53,7 +57,7 @@ JWT_SECRET=your-random-secret-at-least-32-characters-long
 
 Generate a secret with: `openssl rand -base64 32`
 
-Deploy from your dev machine:
+Deploy from **your dev PC** (local clone of the repo):
 
 ```bash
 npm run deploy

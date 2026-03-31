@@ -49,6 +49,8 @@ npm run start
 - **App:** http://localhost:5173  
 - **API:** http://localhost:3001  
 
+**Production (SSH on cod-node):** use server path `/local/bin/projects/Cybersecurity` for `npm audit`, `npx pm2`, etc. See [Docs/DEPLOY-SSH.md](Docs/DEPLOY-SSH.md).
+
 **Demo logins:** `auditor@cod-data.com` / `enduser@cod-data.com` — password: `demo123`
 
 ## Project Structure

@@ -15,6 +15,21 @@ const uploadRoutes = require('./routes/upload');
 const userRoutes = require('./routes/users');
 
 const app = express();
+
+// Invalid percent-sequences (e.g. /%c0) make Express decodeURIComponent throw; bots send these often.
+app.use((req, res, next) => {
+  const pathPart = (req.url || '').split('?')[0];
+  try {
+    decodeURIComponent(pathPart);
+  } catch (err) {
+    if (err instanceof URIError) {
+      return res.status(400).end('Bad Request');
+    }
+    throw err;
+  }
+  next();
+});
+
 const PORT = process.env.PORT || 3001;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
