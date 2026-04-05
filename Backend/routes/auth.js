@@ -151,16 +151,22 @@ router.get('/google', (req, res) => {
     code_challenge: codeChallenge,
     code_challenge_method: 'S256',
     access_type: 'online',
-    prompt: 'select_account',
   });
+  // Omitting prompt lets Google reuse an active browser session (fewer screens). Set
+  // GOOGLE_OAUTH_PROMPT=select_account in deploy.env to always show the account chooser.
+  const oauthPrompt = typeof process.env.GOOGLE_OAUTH_PROMPT === 'string' ? process.env.GOOGLE_OAUTH_PROMPT.trim() : '';
+  if (oauthPrompt) params.set('prompt', oauthPrompt);
+
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
 });
 
 router.get('/google/callback', async (req, res) => {
   const cfg = getGoogleConfig();
+  // Same-origin relative redirects: browser stays on https://cod-data.com even if Host is 10.x:5010
+  // behind NPM (absolute URLs were sending users to localhost:3010 or the backend IP).
   const fail = (code) => {
     const q = code ? `?error=${encodeURIComponent(code)}` : '';
-    res.redirect(`${cfg ? cfg.frontendOrigin : 'http://localhost:3010'}/login${q}`);
+    res.redirect(`/login${q}`);
   };
 
   if (!cfg) {
@@ -232,7 +238,7 @@ router.get('/google/callback', async (req, res) => {
     };
 
     const nonce = stashPendingLogin({ token, user: userOut });
-    res.redirect(`${cfg.frontendOrigin}/auth/callback?nonce=${encodeURIComponent(nonce)}`);
+    res.redirect(`/auth/callback?nonce=${encodeURIComponent(nonce)}`);
   } catch (e) {
     console.error('Google OAuth callback:', e.message);
     return fail('google_oauth_failed');

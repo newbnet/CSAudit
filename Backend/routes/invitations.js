@@ -2,6 +2,7 @@ const express = require('express');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 const { readDb, writeDb } = require('../lib/db');
+const { resolveFrontendOrigin } = require('../lib/googleOAuth');
 const { auth, requireOwnerOrAuditor } = require('../middleware/auth');
 const { isPlatformOwner, editableProjectIdsForAuditor } = require('../lib/access');
 
@@ -78,7 +79,7 @@ router.post('/', (req, res) => {
   db.invitations.push(invitation);
   writeDb(db);
 
-  const base = (process.env.FRONTEND_ORIGIN || 'http://localhost:3010').replace(/\/$/, '');
+  const base = resolveFrontendOrigin(req);
   res.status(201).json({
     id: invitation.id,
     email: invitation.email,

@@ -91,6 +91,79 @@ function takePendingLoginOrReplay(nonce) {
   return payload;
 }
 
+function looksLikeLocalhostOrigin(s) {
+  if (!s || !String(s).trim()) return true;
+  const t = String(s).trim().toLowerCase();
+  return t.includes('localhost') || t.includes('127.0.0.1') || t.startsWith('http://0.0.0.0');
+}
+
+/** e.g. https://cod-data.com from GOOGLE_OAUTH_REDIRECT_URI (public callback URL). */
+function originFromGoogleRedirectUri() {
+  const raw = process.env.GOOGLE_OAUTH_REDIRECT_URI;
+  if (!raw || typeof raw !== 'string') return '';
+  try {
+    const u = new URL(raw.trim());
+    const h = u.hostname.toLowerCase();
+    if (!h || h === 'localhost' || h === '127.0.0.1') return '';
+    return `${u.protocol}//${u.host}`;
+  } catch {
+    return '';
+  }
+}
+
+function isLocalHostHeader(hostHeader) {
+  if (!hostHeader) return true;
+  const name = hostHeader.split(':')[0].toLowerCase();
+  return name === 'localhost' || name === '127.0.0.1';
+}
+
+/** true for loopback, localhost, or RFC1918 (proxy accidentally forwards backend IP as Host). */
+function isPrivateOrLoopbackHost(hostHeader) {
+  if (!hostHeader) return true;
+  const name = hostHeader.split(':')[0].toLowerCase();
+  if (name === 'localhost' || name === '127.0.0.1' || name === '0.0.0.0') return true;
+  if (/^10\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(name)) return true;
+  if (/^192\.168\.\d{1,3}\.\d{1,3}$/.test(name)) return true;
+  if (/^172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3}$/.test(name)) return true;
+  return false;
+}
+
+/**
+ * Public site origin for browser redirects (OAuth return, invite links).
+ * Production: use a real browser hostname from headers only if it is not loopback/private IP
+ * (otherwise NPM→Node can send Host: 10.x.x.x:5010 and we would redirect the user there).
+ * Then FRONTEND_ORIGIN, then origin parsed from GOOGLE_OAUTH_REDIRECT_URI (always matches Google Console).
+ * Never fall back to http://localhost:3010 in production.
+ */
+function resolveFrontendOrigin(req) {
+  const envRaw = (process.env.FRONTEND_ORIGIN || '').trim().replace(/\/$/, '');
+  const prod = process.env.NODE_ENV === 'production';
+  const fromGoogle = originFromGoogleRedirectUri();
+
+  const hostHeader = req
+    ? (req.get('x-forwarded-host') || req.get('host') || '').split(',')[0].trim()
+    : '';
+
+  if (prod && hostHeader && !isPrivateOrLoopbackHost(hostHeader)) {
+    let proto = (req.get('x-forwarded-proto') || '').split(',')[0].trim().toLowerCase();
+    if (proto !== 'http' && proto !== 'https') proto = 'https';
+    return `${proto}://${hostHeader}`;
+  }
+
+  if (prod) {
+    if (envRaw && !looksLikeLocalhostOrigin(envRaw)) return envRaw;
+    if (fromGoogle) return fromGoogle;
+    if (envRaw) return envRaw;
+    console.error(
+      '[COD-DATA] resolveFrontendOrigin: set FRONTEND_ORIGIN or GOOGLE_OAUTH_REDIRECT_URI (used for invite links).'
+    );
+    return fromGoogle;
+  }
+
+  if (envRaw) return envRaw;
+  return 'http://localhost:3010';
+}
+
 function getGoogleConfig() {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
@@ -174,6 +247,8 @@ module.exports = {
   takePendingLoginOrReplay,
   getGoogleConfig,
   isGoogleOAuthEnabled,
+  resolveFrontendOrigin,
+  looksLikeLocalhostOrigin,
   getSigninScopes,
   exchangeCodeForTokens,
   fetchGoogleUserInfo,

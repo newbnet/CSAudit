@@ -6,6 +6,8 @@ export default defineConfig({
   preview: {
     port: 3010,
     host: true,
+    // Match dev: if anything proxies to preview:3010, /api still reaches the backend.
+    proxy: { '/api': 'http://localhost:5010' },
   },
   server: {
     host: true,

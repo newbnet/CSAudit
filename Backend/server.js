@@ -1,17 +1,34 @@
 const path = require('path');
-// Root deploy.env (production / server). Backend/.env adds local vars without overriding existing keys.
-require('dotenv').config({ path: path.join(__dirname, '..', 'deploy.env') });
+// Load local secrets first, then deploy.env with override so production never keeps Backend/.env
+// values like FRONTEND_ORIGIN=http://localhost:3010 when deploy.env has https://cod-data.com.
 require('dotenv').config({ path: path.join(__dirname, '.env') });
+require('dotenv').config({ path: path.join(__dirname, '..', 'deploy.env'), override: true });
 
 // Abwoon d'bwashmaya
 // Fail fast in production if JWT_SECRET is missing
 const { getJwtSecret, isGoogleAuthOnly } = require('./lib/config');
 getJwtSecret();
 if (process.env.NODE_ENV === 'production') {
-  const { isGoogleOAuthEnabled } = require('./lib/googleOAuth');
+  const { isGoogleOAuthEnabled, looksLikeLocalhostOrigin } = require('./lib/googleOAuth');
   console.log(
     `[COD-DATA] Auth: GOOGLE_AUTH_ONLY=${isGoogleAuthOnly()} googleOAuthConfigured=${isGoogleOAuthEnabled()}`
   );
+  const fo = (process.env.FRONTEND_ORIGIN || '').trim();
+  if (isGoogleOAuthEnabled() && looksLikeLocalhostOrigin(fo)) {
+    console.warn(
+      '[COD-DATA] FRONTEND_ORIGIN is missing or points to localhost. OAuth/invite URLs infer the public host from each request; set FRONTEND_ORIGIN=https://cod-data.com in deploy.env for consistency.'
+    );
+  }
+  const redir = (process.env.GOOGLE_OAUTH_REDIRECT_URI || '').trim().toLowerCase();
+  if (
+    isGoogleOAuthEnabled() &&
+    redir &&
+    (redir.includes('localhost') || redir.includes('127.0.0.1'))
+  ) {
+    console.warn(
+      '[COD-DATA] GOOGLE_OAUTH_REDIRECT_URI points to localhost. Google will send the browser there after sign-in. Add GOOGLE_OAUTH_REDIRECT_URI=https://cod-data.com/api/auth/google/callback to deploy.env (and the same URI in Google Cloud Console), then pm2 restart --update-env.'
+    );
+  }
 }
 
 const express = require('express');
