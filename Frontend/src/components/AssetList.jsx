@@ -24,7 +24,7 @@ function getServiceLabel(port, vuln) {
   return PORT_SERVICES[port] || port;
 }
 
-export default function AssetList({ assets, onEdit }) {
+export default function AssetList({ assets, onEdit, readOnly = false }) {
   const [expanded, setExpanded] = useState(null);
 
   const toggle = (id) => setExpanded((e) => (e === id ? null : id));
@@ -156,7 +156,7 @@ export default function AssetList({ assets, onEdit }) {
                     </div>
                   </div>
 
-                  {onEdit && (
+                  {onEdit && !readOnly && (
                     <div className="mb-3">
                       <button
                         type="button"

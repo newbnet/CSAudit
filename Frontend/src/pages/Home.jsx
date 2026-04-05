@@ -1,14 +1,24 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 export default function Home() {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (!loading && user) {
-      navigate(user.role === 'auditor' ? '/auditor' : '/dashboard', { replace: true });
+    if (!menuOpen) return;
+    const onKey = (e) => e.key === 'Escape' && setMenuOpen(false);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!loading && user && user.role !== 'pending') {
+      const dest =
+        user.role === 'owner' ? '/owner' : user.role === 'auditor' ? '/auditor' : '/dashboard';
+      navigate(dest, { replace: true });
     }
   }, [user, loading, navigate]);
 
@@ -20,30 +30,182 @@ export default function Home() {
     );
   }
 
-  if (user) return null;
+  if (user && user.role !== 'pending') return null;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 antialiased">
+    <div className="min-h-dvh bg-slate-950 text-slate-100 antialiased">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-emerald-500 focus:text-slate-900 focus:font-medium"
+      >
+        Skip to content
+      </a>
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/50 bg-slate-950/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link to="/" className="flex items-center gap-3 group">
-            <img src="/cod-data-logo.png" alt="COD-DATA" className="h-11 w-11 object-contain brightness-110 contrast-110" />
-            <span className="text-xl font-bold text-emerald-400 tracking-tight group-hover:text-emerald-300 transition-colors">COD-DATA</span>
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 border-b border-slate-800/50 bg-slate-950/90 backdrop-blur-md pt-[max(0.5rem,env(safe-area-inset-top,0px))]"
+        aria-label="Primary"
+      >
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center gap-3">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group min-w-0" onClick={() => setMenuOpen(false)}>
+            <img
+              src="/cod-data-logo.png"
+              alt=""
+              className="h-9 w-9 sm:h-11 sm:w-11 shrink-0 object-contain brightness-110 contrast-110"
+            />
+            <span className="text-lg sm:text-xl font-bold text-emerald-400 tracking-tight group-hover:text-emerald-300 transition-colors truncate">
+              COD-DATA
+            </span>
           </Link>
-          <div className="flex items-center gap-6">
-            <a href="#features" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">Features</a>
-            <a href="#built-for" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">Who it's for</a>
-            <a href="#resources" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">Resources</a>
-            <Link to="/login" className="text-sm font-medium px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors">
-              Sign in
+
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#features" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              Features
+            </a>
+            <a href="#built-for" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              Who it&apos;s for
+            </a>
+            <a href="#resources" className="text-sm text-slate-400 hover:text-emerald-400 transition-colors">
+              Resources
+            </a>
+            <Link to="/terms" className="text-sm text-slate-500 hover:text-emerald-400 transition-colors">
+              Terms
             </Link>
+            <Link to="/privacy" className="text-sm text-slate-500 hover:text-emerald-400 transition-colors">
+              Privacy
+            </Link>
+            {user?.role === 'pending' ? (
+              <>
+                <Link
+                  to="/pending"
+                  className="text-sm font-medium px-4 py-2 rounded-lg bg-amber-500/15 text-amber-400 hover:bg-amber-500/25 transition-colors"
+                >
+                  Account status
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => logout()}
+                  className="text-sm text-slate-400 hover:text-emerald-400 transition-colors"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="text-sm font-medium px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition-colors"
+              >
+                Sign in
+              </Link>
+            )}
           </div>
+
+          <button
+            type="button"
+            className="md:hidden inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800"
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav-menu"
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
+            {menuOpen ? (
+              <span className="text-lg leading-none" aria-hidden>
+                ×
+              </span>
+            ) : (
+              <span className="text-sm font-semibold tracking-tight" aria-hidden>
+                Menu
+              </span>
+            )}
+          </button>
         </div>
+
+        {menuOpen && (
+          <div
+            id="mobile-nav-menu"
+            className="md:hidden border-t border-slate-800/80 bg-slate-950/98 px-4 py-4 space-y-1 pb-[max(1rem,env(safe-area-inset-bottom,0px))]"
+          >
+            <a
+              href="#features"
+              className="block min-h-[44px] flex items-center text-slate-300 hover:text-emerald-400 border-b border-slate-800/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Features
+            </a>
+            <a
+              href="#built-for"
+              className="block min-h-[44px] flex items-center text-slate-300 hover:text-emerald-400 border-b border-slate-800/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Who it&apos;s for
+            </a>
+            <a
+              href="#resources"
+              className="block min-h-[44px] flex items-center text-slate-300 hover:text-emerald-400 border-b border-slate-800/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Resources
+            </a>
+            <Link
+              to="/terms"
+              className="block min-h-[44px] flex items-center text-slate-300 hover:text-emerald-400 border-b border-slate-800/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Terms
+            </Link>
+            <Link
+              to="/privacy"
+              className="block min-h-[44px] flex items-center text-slate-300 hover:text-emerald-400 border-b border-slate-800/80"
+              onClick={() => setMenuOpen(false)}
+            >
+              Privacy
+            </Link>
+            {user?.role === 'pending' ? (
+              <>
+                <Link
+                  to="/pending"
+                  className="block min-h-[44px] flex items-center font-medium text-amber-400"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Account status
+                </Link>
+                <button
+                  type="button"
+                  className="block w-full text-left min-h-[44px] flex items-center text-slate-400"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    logout();
+                  }}
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/login"
+                className="block min-h-[44px] flex items-center font-medium text-emerald-400"
+                onClick={() => setMenuOpen(false)}
+              >
+                Sign in
+              </Link>
+            )}
+          </div>
+        )}
       </nav>
 
+      {user?.role === 'pending' && (
+        <div className="fixed top-[73px] left-0 right-0 z-40 border-b border-amber-500/25 bg-amber-950/40 px-4 sm:px-6 py-2 text-center text-sm text-amber-200/95">
+          Signed in as {user.email}. Waiting for an auditor to assign access —{' '}
+          <Link to="/pending" className="underline font-medium text-amber-100 hover:text-white">
+            open account status
+          </Link>
+        </div>
+      )}
+
       {/* Hero */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+      <section
+        id="main-content"
+        className={`relative pb-20 sm:pb-24 px-4 sm:px-6 overflow-hidden ${user?.role === 'pending' ? 'pt-36 sm:pt-40' : 'pt-28 sm:pt-32'}`}
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-emerald-500/5 via-transparent to-transparent" />
         <div className="absolute top-40 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-20 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl" />
@@ -54,7 +216,7 @@ export default function Home() {
           <p className="text-emerald-400/90 text-sm font-medium tracking-wider uppercase mb-4">
             Cybersecurity Oversight & Defense
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold text-slate-100 leading-tight mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold text-slate-100 leading-tight mb-6">
             Vulnerability management
             <br />
             <span className="text-emerald-400">that scales with your organization</span>
@@ -78,7 +240,7 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-24 px-6">
+      <section id="features" className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-slate-100 mb-4">Everything you need to stay ahead</h2>
@@ -138,7 +300,7 @@ export default function Home() {
       </section>
 
       {/* Who it's for */}
-      <section id="built-for" className="py-20 px-6">
+      <section id="built-for" className="py-16 sm:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-slate-100 mb-4">Built for security professionals</h2>
@@ -164,7 +326,7 @@ export default function Home() {
       </section>
 
       {/* Resources / Useful info */}
-      <section id="resources" className="py-24 px-6 bg-slate-900/30">
+      <section id="resources" className="py-16 sm:py-24 px-4 sm:px-6 bg-slate-900/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-slate-100 mb-4">Resources & related tools</h2>
@@ -283,7 +445,7 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6">
+      <section className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl font-bold text-slate-100 mb-4">Ready to streamline your vulnerability workflow?</h2>
           <p className="text-slate-400 mb-8">
@@ -299,16 +461,18 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <footer className="border-t border-slate-800 py-10 sm:py-12 px-4 sm:px-6 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <img src="/cod-data-logo.png" alt="" className="h-7 w-7 object-contain opacity-90 brightness-110" />
             <span className="text-slate-500 text-sm">COD-DATA · Cybersecurity Oversight & Defense</span>
           </div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6 justify-center">
             <a href="#features" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Features</a>
             <a href="#built-for" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Who it's for</a>
             <a href="#resources" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Resources</a>
+            <Link to="/terms" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Terms</Link>
+            <Link to="/privacy" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Privacy</Link>
             <Link to="/login" className="text-slate-500 hover:text-emerald-400 text-sm transition-colors">Sign in</Link>
           </div>
         </div>

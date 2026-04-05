@@ -1,4 +1,7 @@
 const path = require('path');
+const fs = require('fs');
+
+const deployEnvPath = path.join(__dirname, 'deploy.env');
 
 module.exports = {
   apps: [
@@ -10,6 +13,7 @@ module.exports = {
       autorestart: true,
       watch: false,
       max_memory_restart: '500M',
+      ...(fs.existsSync(deployEnvPath) ? { env_file: deployEnvPath } : {}),
       env: { NODE_ENV: 'development', PORT: '5010' },
       error_file: path.join(__dirname, 'logs', 'backend-error.log'),
       out_file: path.join(__dirname, 'logs', 'backend-out.log'),

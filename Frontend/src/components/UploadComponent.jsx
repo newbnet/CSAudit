@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { uploadNmap, uploadNessus, uploadOpenvas } from '../api';
 
-export default function UploadComponent({ projectId, projects, onProjectChange, onSuccess }) {
+export default function UploadComponent({ projectId, projects, readOnly = false, onProjectChange, onSuccess }) {
   const [file, setFile] = useState(null);
   const [format, setFormat] = useState('nmap');
   const [loading, setLoading] = useState(false);
@@ -10,6 +10,7 @@ export default function UploadComponent({ projectId, projects, onProjectChange, 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (readOnly) return;
     if (!projectId) {
       setError('Select a project first');
       return;
@@ -38,20 +39,29 @@ export default function UploadComponent({ projectId, projects, onProjectChange, 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-lg">
+      {readOnly && (
+        <p className="text-cyan-200/90 text-sm p-3 rounded-lg border border-cyan-500/30 bg-cyan-950/30">
+          Read-only project — uploads are disabled.
+        </p>
+      )}
       <div className="p-4 rounded-lg border border-slate-700 bg-slate-800/50">
         <label className="block text-sm font-medium text-slate-300 mb-2">Target project (customer/site)</label>
         <p className="text-xs text-slate-500 mb-2">Select the project to avoid mixing data between customers.</p>
         <select
           value={projectId}
           onChange={(e) => onProjectChange?.(e.target.value)}
-          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none mb-2"
+          disabled={readOnly}
+          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none mb-2 disabled:opacity-50"
         >
           <option value="">Select project...</option>
           {(projects || []).map((p) => (
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
-        <p className="text-xs text-slate-500">
+        <p className="text-xs text-slate-500 sm:hidden">
+          {(projects || []).length} project{(projects || []).length === 1 ? '' : 's'} available
+        </p>
+        <p className="hidden sm:block text-xs text-slate-500 break-words">
           Projects: {(projects || []).map((p) => p.name).join(', ') || 'None'}
         </p>
         {selectedProject && (
@@ -65,7 +75,8 @@ export default function UploadComponent({ projectId, projects, onProjectChange, 
         <select
           value={format}
           onChange={(e) => setFormat(e.target.value)}
-          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none"
+          disabled={readOnly}
+          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-100 focus:border-emerald-500 focus:outline-none disabled:opacity-50"
         >
           <option value="nmap">Nmap (XML)</option>
           <option value="openvas">OpenVAS (CSV)</option>
@@ -79,7 +90,8 @@ export default function UploadComponent({ projectId, projects, onProjectChange, 
           type="file"
           accept={format === 'nmap' ? '.xml' : '.csv,.txt'}
           onChange={(e) => setFile(e.target.files?.[0] || null)}
-          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-emerald-500/20 file:text-emerald-400"
+          disabled={readOnly}
+          className="w-full px-4 py-2 rounded-md bg-slate-800 border border-slate-600 text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-emerald-500/20 file:text-emerald-400 disabled:opacity-50"
         />
       </div>
 
@@ -88,7 +100,7 @@ export default function UploadComponent({ projectId, projects, onProjectChange, 
 
       <button
         type="submit"
-        disabled={loading || !file}
+        disabled={readOnly || loading || !file}
         className="px-6 py-2 rounded-md bg-emerald-500 text-slate-900 font-semibold hover:bg-emerald-400 disabled:opacity-50 transition-colors"
       >
         {loading ? 'Uploading...' : 'Upload'}

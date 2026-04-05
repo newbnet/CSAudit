@@ -1,18 +1,29 @@
-require('dotenv').config({ path: require('path').join(__dirname, '..', 'deploy.env') });
+const path = require('path');
+// Root deploy.env (production / server). Backend/.env adds local vars without overriding existing keys.
+require('dotenv').config({ path: path.join(__dirname, '..', 'deploy.env') });
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 // Abwoon d'bwashmaya
 // Fail fast in production if JWT_SECRET is missing
-require('./lib/config').getJwtSecret();
+const { getJwtSecret, isGoogleAuthOnly } = require('./lib/config');
+getJwtSecret();
+if (process.env.NODE_ENV === 'production') {
+  const { isGoogleOAuthEnabled } = require('./lib/googleOAuth');
+  console.log(
+    `[COD-DATA] Auth: GOOGLE_AUTH_ONLY=${isGoogleAuthOnly()} googleOAuthConfigured=${isGoogleOAuthEnabled()}`
+  );
+}
 
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projects');
 const assetRoutes = require('./routes/assets');
 const uploadRoutes = require('./routes/upload');
 const userRoutes = require('./routes/users');
+const invitationRoutes = require('./routes/invitations');
+const assetTypesRoutes = require('./routes/assetTypes');
 
 const app = express();
 
@@ -60,6 +71,8 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/assets', assetRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/invitations', invitationRoutes);
+app.use('/api/asset-types', assetTypesRoutes);
 
 if (IS_PRODUCTION && distExists) {
   app.use(express.static(FRONTEND_DIST));

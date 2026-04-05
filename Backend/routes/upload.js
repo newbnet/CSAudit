@@ -3,14 +3,15 @@ const multer = require('multer');
 const { parseStringPromise } = require('xml2js');
 const { v4: uuidv4 } = require('uuid');
 const { readDb, writeDb } = require('../lib/db');
-const { auth, requireRole } = require('../middleware/auth');
+const { auth, requireOwnerOrAuditor } = require('../middleware/auth');
+const { assertAuditorProjectEdit } = require('../lib/access');
 const { inferAssetType } = require('../lib/assetTypeMapper');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 router.use(auth);
-router.use(requireRole('auditor'));
+router.use(requireOwnerOrAuditor);
 
 /**
  * Parse Nmap XML - extracts hostname, ports with state, service name/product/version
@@ -158,6 +159,9 @@ router.post('/nmap', upload.single('file'), async (req, res) => {
     const findings = await parseNmapXml(req.file.buffer);
     const db = readDb();
 
+    const chk = assertAuditorProjectEdit(db, req.user, projectId);
+    if (!chk.ok) return res.status(chk.status).json({ error: chk.error });
+
     const project = (db.projects || []).find((p) => p.id === projectId);
     if (!project) return res.status(400).json({ error: 'Invalid project' });
 
@@ -263,6 +267,9 @@ router.post('/nessus', upload.single('file'), (req, res) => {
   if (!projectId) return res.status(400).json({ error: 'Project required' });
 
   const db = readDb();
+  const chk = assertAuditorProjectEdit(db, req.user, projectId);
+  if (!chk.ok) return res.status(chk.status).json({ error: chk.error });
+
   const project = (db.projects || []).find((p) => p.id === projectId);
   if (!project) return res.status(400).json({ error: 'Invalid project' });
 
@@ -329,6 +336,9 @@ router.post('/openvas', upload.single('file'), (req, res) => {
   if (!projectId) return res.status(400).json({ error: 'Project required' });
 
   const db = readDb();
+  const chk = assertAuditorProjectEdit(db, req.user, projectId);
+  if (!chk.ok) return res.status(chk.status).json({ error: chk.error });
+
   const project = (db.projects || []).find((p) => p.id === projectId);
   if (!project) return res.status(400).json({ error: 'Invalid project' });
 

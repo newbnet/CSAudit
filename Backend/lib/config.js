@@ -14,4 +14,19 @@ function getJwtSecret() {
   return secret || 'cod-data-dev-secret-change-in-production';
 }
 
-module.exports = { getJwtSecret };
+/** When true: password login and open (non-invite) registration are disabled; use Google OAuth. */
+function isGoogleAuthOnly() {
+  let v = process.env.GOOGLE_AUTH_ONLY;
+  if (v == null || String(v).trim() === '') return false;
+  v = String(v).trim();
+  if (
+    (v.startsWith('"') && v.endsWith('"')) ||
+    (v.startsWith("'") && v.endsWith("'"))
+  ) {
+    v = v.slice(1, -1).trim();
+  }
+  const lower = v.toLowerCase();
+  return lower === '1' || lower === 'true' || lower === 'yes' || lower === 'on';
+}
+
+module.exports = { getJwtSecret, isGoogleAuthOnly };

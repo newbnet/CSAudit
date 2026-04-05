@@ -78,6 +78,7 @@ npm run start
 - [Docs/HOW_TO_AUDITOR.md](Docs/HOW_TO_AUDITOR.md) – Step-by-step auditor guide (Nmap scan, import, OpenVAS)
 - [Docs/USER_ROLES.md](Docs/USER_ROLES.md) – Auditor vs end-user
 - [Docs/AUDITOR_SOFTWARE_LIST.md](Docs/AUDITOR_SOFTWARE_LIST.md) – Audit tools (Nmap, OpenVAS, Nessus)
+- [Docs/GOOGLE-OAUTH.md](Docs/GOOGLE-OAUTH.md) – Optional Google sign-in
 
 ## Version
 
