@@ -30,9 +30,12 @@ app.use((req, res, next) => {
   next();
 });
 
-const PORT = process.env.PORT || 3001;
+const fs = require('fs');
+const parsedPort = Number(process.env.PORT);
+const PORT = Number.isFinite(parsedPort) && parsedPort > 0 ? parsedPort : 3001;
 const IS_PRODUCTION = process.env.NODE_ENV === 'production';
 const FRONTEND_DIST = path.join(__dirname, '..', 'Frontend', 'dist');
+const distExists = fs.existsSync(FRONTEND_DIST);
 
 const CORS_ORIGINS = [
   'http://localhost:5173',
@@ -58,15 +61,37 @@ app.use('/api/assets', assetRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/users', userRoutes);
 
-if (IS_PRODUCTION && require('fs').existsSync(FRONTEND_DIST)) {
+if (IS_PRODUCTION && distExists) {
   app.use(express.static(FRONTEND_DIST));
   app.get('*', (req, res) => res.sendFile(path.join(FRONTEND_DIST, 'index.html')));
+} else if (IS_PRODUCTION && !distExists) {
+  console.error(
+    `COD-DATA: NODE_ENV=production but no built frontend at ${FRONTEND_DIST}. On the server run: cd Frontend && npm install && npm run build`
+  );
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api') || req.path === '/health') {
+      return res.status(404).end();
+    }
+    res
+      .status(503)
+      .type('html')
+      .send(
+        '<!DOCTYPE html><html><head><meta charset="utf-8"><title>COD-DATA</title></head><body>' +
+          '<h1>App not built</h1><p>Production mode requires <code>Frontend/dist</code>. On the app server run:</p>' +
+          '<pre>cd /local/bin/projects/Cybersecurity/Frontend && npm install && npm run build && cd .. && pm2 restart cybersecurity-backend</pre>' +
+          '<p><a href="/health">Health check</a></p></body></html>'
+      );
+  });
 } else {
   app.get('/', (req, res) => {
     const host = req.get('host') || `localhost:${PORT}`;
     const frontPort = PORT === 5010 ? '3010' : '5173';
-    const appUrl = `http://${host.split(':')[0]}:${frontPort}`;
-    res.type('html').send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>COD-DATA API</title></head><body><h1>COD-DATA Backend</h1><p>API server. Use the app at <a href="${appUrl}">${appUrl}</a></p><p><a href="/health">Health check</a></p></body></html>`);
+    const appUrl = `${req.protocol}://${host.split(':')[0]}:${frontPort}`;
+    res
+      .type('html')
+      .send(
+        `<!DOCTYPE html><html><head><meta charset="utf-8"><title>COD-DATA API</title></head><body><h1>COD-DATA Backend</h1><p>API server (dev). Use the app at <a href="${appUrl}">${appUrl}</a></p><p><a href="/health">Health check</a></p></body></html>`
+      );
   });
 }
 
