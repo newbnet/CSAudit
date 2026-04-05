@@ -167,14 +167,21 @@ export default function Home() {
       <section id="resources" className="py-24 px-6 bg-slate-900/30">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-slate-100 mb-4">Cybersecurity resources</h2>
-            <p className="text-slate-400 max-w-2xl mx-auto">
-              Practical guidance to strengthen your security posture and compliance.
+            <h2 className="text-3xl font-bold text-slate-100 mb-4">Resources & related tools</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto mb-3">
+              Practical guidance to strengthen your security posture and compliance—plus other COD-DATA apps
+              that live on their own subdomains.
+            </p>
+            <p className="text-slate-500 text-sm max-w-2xl mx-auto">
+              <span className="text-emerald-400/90 font-medium">This platform</span> is vulnerability management and
+              audits. Tools like GearGuard are for everyday maintenance and hobbies; they are not security-dashboard
+              software and use <strong className="text-slate-400">their own branding and sign-in</strong> when you
+              follow the link.
             </p>
           </div>
 
           {/* Projects */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
             <a
               href="https://cod-data.com"
               className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
@@ -210,6 +217,29 @@ export default function Home() {
                 <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Spectra</h3>
                 <p className="text-slate-400 text-sm">Spectrum & frequency analyzer</p>
                 <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">spectra.cod-data.com →</span>
+              </div>
+            </a>
+            <a
+              href="https://gearguard.cod-data.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-2xl border border-amber-500/35 bg-gradient-to-br from-slate-950/90 to-amber-950/20 hover:border-amber-400/55 transition-all flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
+              <span className="text-3xl shrink-0" aria-hidden>
+                🔧
+              </span>
+              <div className="min-w-0 text-left">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-amber-500/90 mb-1">
+                  Separate app · own sign-in
+                </p>
+                <h3 className="text-lg font-semibold text-amber-400 group-hover:text-amber-300 mb-1">GearGuard</h3>
+                <p className="text-slate-400 text-sm leading-snug">
+                  Track maintenance for hobbies, vehicles, and gear—oil changes, service logs, mileage, and reminders.
+                  Built for daily upkeep, not security assessments.
+                </p>
+                <span className="text-amber-500/90 text-sm mt-2 inline-block group-hover:underline">
+                  gearguard.cod-data.com →
+                </span>
               </div>
             </a>
           </div>
