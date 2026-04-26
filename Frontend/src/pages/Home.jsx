@@ -336,22 +336,30 @@ export default function Home() {
             </p>
             <p className="text-slate-500 text-sm max-w-2xl mx-auto">
               <span className="text-emerald-400/90 font-medium">This platform</span> is vulnerability management and
-              audits. Tools like GearGuard are for everyday maintenance and hobbies; they are not security-dashboard
-              software and use <strong className="text-slate-400">their own branding and sign-in</strong> when you
-              follow the link.
+              audits. Other subdomains are separate experiences: some are simple utilities, some require{' '}
+              <strong className="text-slate-400">their own sign-in and branding</strong>. External links open in a new
+              window so you can keep this tab on the security app.
             </p>
           </div>
 
           {/* Projects */}
-          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-12">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-6 mb-12">
             <a
               href="https://cod-data.com"
-              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+              className="group p-6 rounded-2xl border border-emerald-500/30 bg-slate-950/80 hover:border-emerald-500/55 transition-all flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <span className="text-3xl">🛡️</span>
-              <div>
+              <span className="text-3xl shrink-0" aria-hidden>
+                🛡️
+              </span>
+              <div className="min-w-0 text-left">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-emerald-500/85 mb-1">
+                  Product hub · same window
+                </p>
                 <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">COD-DATA</h3>
-                <p className="text-slate-400 text-sm">Vulnerability management and audit platform</p>
+                <p className="text-slate-400 text-sm leading-snug">
+                  Main site for the brand: vulnerability program overview, how audits and assets fit together, and
+                  links into this dashboard experience.
+                </p>
                 <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">cod-data.com →</span>
               </div>
             </a>
@@ -359,12 +367,20 @@ export default function Home() {
               href="https://grab.cod-data.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-cyan-500/40 transition-all flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <span className="text-3xl">📥</span>
-              <div>
+              <span className="text-3xl shrink-0" aria-hidden>
+                📥
+              </span>
+              <div className="min-w-0 text-left">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-cyan-500/80 mb-1">
+                  Utility · new window
+                </p>
                 <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Grab</h3>
-                <p className="text-slate-400 text-sm">Video downloader</p>
+                <p className="text-slate-400 text-sm leading-snug">
+                  Download and work with online video in one place. Entertainment and media workflow—not scanning,
+                  checklists, or compliance reporting.
+                </p>
                 <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">grab.cod-data.com →</span>
               </div>
             </a>
@@ -372,12 +388,20 @@ export default function Home() {
               href="https://spectra.cod-data.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-emerald-500/50 transition-all flex items-center gap-4"
+              className="group p-6 rounded-2xl border border-slate-800 bg-slate-950/80 hover:border-cyan-500/40 transition-all flex flex-col gap-3 sm:flex-row sm:items-center"
             >
-              <span className="text-3xl">📊</span>
-              <div>
+              <span className="text-3xl shrink-0" aria-hidden>
+                📊
+              </span>
+              <div className="min-w-0 text-left">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-cyan-500/80 mb-1">
+                  Utility · new window
+                </p>
                 <h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 mb-1">Spectra</h3>
-                <p className="text-slate-400 text-sm">Spectrum & frequency analyzer</p>
+                <p className="text-slate-400 text-sm leading-snug">
+                  Visual spectrum and frequency tools for audio and signals. Lab-style analysis, separate from Nmap
+                  imports and vulnerability dashboards.
+                </p>
                 <span className="text-emerald-500/80 text-sm mt-2 inline-block group-hover:underline">spectra.cod-data.com →</span>
               </div>
             </a>
@@ -401,6 +425,29 @@ export default function Home() {
                 </p>
                 <span className="text-amber-500/90 text-sm mt-2 inline-block group-hover:underline">
                   gearguard.cod-data.com →
+                </span>
+              </div>
+            </a>
+            <a
+              href="https://bodyguard.cod-data.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group p-6 rounded-2xl border border-amber-500/35 bg-gradient-to-br from-slate-950/90 to-amber-950/20 hover:border-amber-400/55 transition-all flex flex-col gap-3 sm:flex-row sm:items-center"
+            >
+              <span className="text-3xl shrink-0" aria-hidden>
+                🌿
+              </span>
+              <div className="min-w-0 text-left">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-amber-500/90 mb-1">
+                  Separate app · own sign-in
+                </p>
+                <h3 className="text-lg font-semibold text-amber-400 group-hover:text-amber-300 mb-1">BodyGuard</h3>
+                <p className="text-slate-400 text-sm leading-snug">
+                  Educational body wisdom—symptoms, body systems, plants, and remedy guides. For wellness and reference
+                  reading, not vulnerability or audit work on this platform.
+                </p>
+                <span className="text-amber-500/90 text-sm mt-2 inline-block group-hover:underline">
+                  bodyguard.cod-data.com →
                 </span>
               </div>
             </a>
